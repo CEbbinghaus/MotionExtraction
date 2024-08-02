@@ -43,15 +43,22 @@ fn read_webcam_frames(
     buffer_size: usize,
 ) {
     let mut camera = Camera::new(CameraIndex::Index(0), RequestedFormat::new::<RgbAFormat>(RequestedFormatType::AbsoluteHighestFrameRate)).unwrap();
- 
+    camera.open_stream().unwrap();
+    
     let mut cur_buffer: Vec<u8> = vec![0; buffer_size];
     let mut prev_buffer: Vec<u8> = vec![0; buffer_size];
 
     loop {
         let frame = camera.frame().unwrap();
-        frame
-            .decode_image_to_buffer::<RgbAFormat>(cur_buffer.as_mut_slice())
-            .unwrap();
+        // frame
+        //     .decode_image_to_buffer::<RgbAFormat>(cur_buffer.as_mut_slice())
+        //     .unwrap();
+
+        let decompress = mozjpeg::Decompress::new_mem(frame.buffer()).unwrap();
+
+        let mut decompress = decompress.rgba().unwrap();
+
+        decompress.read_scanlines_into(&mut cur_buffer).unwrap();
 
         {
             let queue = queue.lock().unwrap();
@@ -382,6 +389,7 @@ pub fn main() {
     // get a frame. We use this to scale the window
     let frame = {
         let mut camera = Camera::new(CameraIndex::Index(0), RequestedFormat::new::<RgbAFormat>(RequestedFormatType::AbsoluteHighestFrameRate)).unwrap();
+        camera.open_stream().unwrap();
         camera.frame().unwrap()
     };
 
