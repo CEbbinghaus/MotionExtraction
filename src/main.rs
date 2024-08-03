@@ -50,15 +50,18 @@ fn read_webcam_frames(
 
     loop {
         let frame = camera.frame().unwrap();
-        // frame
-        //     .decode_image_to_buffer::<RgbAFormat>(cur_buffer.as_mut_slice())
-        //     .unwrap();
 
-        let decompress = mozjpeg::Decompress::new_mem(frame.buffer()).unwrap();
-
-        let mut decompress = decompress.rgba().unwrap();
-
-        decompress.read_scanlines_into(&mut cur_buffer).unwrap();
+        if cfg!(windows) {
+            frame
+                .decode_image_to_buffer::<RgbAFormat>(cur_buffer.as_mut_slice())
+                .unwrap();
+        } else  {
+            let decompress = mozjpeg::Decompress::new_mem(frame.buffer()).unwrap();
+    
+            let mut decompress = decompress.rgba().unwrap();
+    
+            decompress.read_scanlines_into(cur_buffer.as_mut_slice()).unwrap();
+        }
 
         {
             let queue = queue.lock().unwrap();

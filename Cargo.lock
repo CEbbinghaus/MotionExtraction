@@ -1294,6 +1294,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "motion-extractor"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bytemuck",
+ "image",
+ "mozjpeg",
+ "nokhwa",
+ "pollster",
+ "softbuffer",
+ "wgpu",
+ "winit",
+]
+
+[[package]]
 name = "mozjpeg"
 version = "0.10.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2542,21 +2557,6 @@ checksum = "aa30049b1c872b72c89866d458eae9f20380ab280ffd1b1e18df2d3e2d98cfe0"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
-]
-
-[[package]]
-name = "webcam"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "bytemuck",
- "image",
- "mozjpeg",
- "nokhwa",
- "pollster",
- "softbuffer",
- "wgpu",
- "winit",
 ]
 
 [[package]]
